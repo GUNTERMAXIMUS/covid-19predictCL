@@ -1,8 +1,7 @@
-import tensorflow as tf
-from tensorflow import keras
-
 try:
   %tensorflow_version 2.x
+  import tensorflow as tf
+  from tensorflow import keras
 except OSError:
   print(tf.__version__)
 finally:
@@ -10,22 +9,21 @@ finally:
   import pandas as pd
   import matplotlib.pyplot as plt
   print(tf.__version__)
-  from google.colab import drive
-  drive.mount('/content/gdrive', force_remount = True, timeout_ms = 60000)
+  import requests as rq
+  import io
+#  from google.colab import drive
+#  drive.mount('/content/gdrive', force_remount = True, timeout_ms = 60000)
 
  ###
 
- file_path = 'gdrive/My Drive/Colab Notebooks/'
- f_data = file_path + 'covid_19_data.csv' 
- df_data = pd.read_csv(f_data, 
-                       sep = ',', 
-                       quotechar = '"', 
-                       usecols = [1, 3, 5, 6 , 7], 
-                       encoding = 'utf-8')
+url = 'https://raw.githubusercontent.com/GUNTERMAXIMUS/covid-19predictCL/master/covid_19_data.csv'
+respond = rq.get(url).content
 
-df = df_data[df_data['Country/Region'].str.contains('Chile')]
-print(df.isnull().any())
-df.head(10)
+df_data = pd.read_csv(io.StringIO(respond.decode('utf-8')), 
+                      sep = ',', 
+                      quotechar = '"', 
+                      usecols = [1, 3, 5, 6 , 7], 
+                      encoding = 'utf-8')
 
 ###
 
